@@ -363,6 +363,10 @@ export const portkeyConfig: PortkeyConfigMap = {
                 providerOptions: { gateway: { only: ["novita"] } },
             },
         }),
+    "nex-agi/nex-n2.5-pro": createPinnedOpenRouterConfig(
+        "nex-agi/nex-n2.5-pro",
+        "nex-agi/fp8",
+    ),
     "inclusionai/ling-3.0-flash-vl": createPinnedOpenRouterConfig(
         "inclusionai/ling-3.0-flash-vl",
         "deepinfra/fp16",
