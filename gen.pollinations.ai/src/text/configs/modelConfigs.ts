@@ -363,10 +363,15 @@ export const portkeyConfig: PortkeyConfigMap = {
                 providerOptions: { gateway: { only: ["novita"] } },
             },
         }),
-    "nex-agi/nex-n2.5-mini": createPinnedOpenRouterConfig(
-        "nex-agi/nex-n2.5-mini",
-        "nex-agi/bf16",
-    ),
+    // Nex AGI answers an unusable image URL with a 503. Inlining images makes
+    // that the caller's 400 before the provider is called.
+    "nex-agi/nex-n2.5-mini": () => ({
+        ...createPinnedOpenRouterConfig(
+            "nex-agi/nex-n2.5-mini",
+            "nex-agi/bf16",
+        )(),
+        requiresBase64ImageUrls: true,
+    }),
     "inclusionai/ling-3.0-flash-vl": createPinnedOpenRouterConfig(
         "inclusionai/ling-3.0-flash-vl",
         "deepinfra/fp16",

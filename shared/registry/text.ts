@@ -2222,6 +2222,8 @@ const TEXT_BASE_SERVICES = {
             // mandatory 5.5% OpenRouter credit fee.
             promptTextTokens: perMillion(0.025) * 1.055,
             promptCachedTokens: perMillion(0.0025) * 1.055,
+            // The endpoint has no image price; image input bills as prompt.
+            promptImageTokens: perMillion(0.025) * 1.055,
             completionTextTokens: perMillion(0.1) * 1.055,
         },
         title: "Nex N2.5 Mini",

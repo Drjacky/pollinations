@@ -221,6 +221,7 @@ describe("resolveModelConfig", () => {
             only: ["nex-agi/bf16"],
             allow_fallbacks: false,
         });
+        expect(result.options.modelConfig?.requiresBase64ImageUrls).toBe(true);
     });
 
     it("pins Ling 3.0 Flash VL to DeepInfra fp16 on OpenRouter without fallback", () => {
