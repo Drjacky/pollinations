@@ -275,7 +275,7 @@ describe("static provider fallbacks", () => {
             TEXT_SERVICES[
                 "google/gemini-3.1-pro-preview:openrouter:vertex-global"
             ];
-        expect(primary.priceMultiplier).toBe(1.055);
+        expect(primary.priceMultiplier).toBe(1);
         expect(fallback.priceMultiplier).toBe(1);
         for (const definition of [primary, fallback]) {
             const billed = calculateUsageBilling({
@@ -311,10 +311,8 @@ describe("static provider fallbacks", () => {
                     ? directCost * 1.055
                     : directCost;
             expect(billed.cost.totalCost).toBeCloseTo(expectedCost, 12);
-            expect(billed.price.totalPrice).toBeCloseTo(directCost * 1.055, 8);
-            expect(billed.priceDefinition.promptTextTokens).toBe(
-                (4 / 1_000_000) * 1.055,
-            );
+            expect(billed.price.totalPrice).toBeCloseTo(directCost, 8);
+            expect(billed.priceDefinition.promptTextTokens).toBe(4 / 1_000_000);
         }
     });
 
@@ -903,20 +901,21 @@ describe("static provider fallbacks", () => {
         });
     });
 
-    it("prices Gemini 4 Argon on AI Studio with OpenRouter's fee applied once", () => {
+    it("prices Gemini 4 Argon at Vertex list and records OpenRouter's fee on the fallback", () => {
         const primary = TEXT_SERVICES["google/gemini-4-argon"];
         const fallback =
             TEXT_SERVICES["google/gemini-4-argon:openrouter:ai-studio"];
         expect(primary).toMatchObject({
             provider: "google",
             paidOnly: true,
+            priceMultiplier: 1,
             aliases: [],
             fallbacks: ["google/gemini-4-argon:openrouter:ai-studio"],
         });
         expect(fallback.cost).toMatchObject({
-            promptTextTokens: (2 / 1_000_000) * 1.055,
-            promptCachedTokens: (0.1 / 1_000_000) * 1.055,
-            completionTextTokens: (10 / 1_000_000) * 1.055,
+            promptTextTokens: (4 / 1_000_000) * 1.055,
+            promptCachedTokens: (0.2 / 1_000_000) * 1.055,
+            completionTextTokens: (20 / 1_000_000) * 1.055,
         });
         const billing = calculateUsageBilling({
             model: "google/gemini-4-argon",
@@ -924,8 +923,22 @@ describe("static provider fallbacks", () => {
             servedBy: fallback,
             quotedBy: primary,
         });
-        expect(billing.cost.totalCost).toBeCloseTo(0.01266, 12);
-        expect(billing.price.totalPrice).toBeCloseTo(0.01266, 12);
+        expect(billing.cost.totalCost).toBeCloseTo(0.02532, 12);
+        expect(billing.price.totalPrice).toBeCloseTo(0.024, 12);
+        expect(
+            findModelByName(
+                "google/gemini-4-argon:openrouter:ai-studio",
+            )?.config(),
+        ).toMatchObject({
+            defaultOptions: {
+                provider: {
+                    ignore: [
+                        "google-ai-studio/priority",
+                        "google-ai-studio/flex",
+                    ],
+                },
+            },
+        });
     });
 
     it("shares Scout capabilities and pricing across its two routes", () => {
