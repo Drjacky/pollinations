@@ -1,0 +1,19 @@
+[console.error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[net] /v1/chat/completions failed: net::ERR_ABORTED
+[text] after cancel: "useTextGenerateCancel"
+[net] POST /v1/chat/completions -> 200
+[text] Honey bees hum and fly, Sweet nectar gathered in their hive, Nature's artists.
+[net] GET /image/a%20watercolor%20bee%20on%20a%20sunflower -> 200
+[image] naturalWidth=512
+[image] section: "useImageGenerateRe-runCancel"
+[net] GET /audio/Hello%20from%20Pollinations%20hooks! -> 200
+[audio] audio/mpeg, 58739 bytes
+[audio] section: "useAudioSpeak audio/mpeg, 58739 bytes"
+[net] POST /v1/responses -> 200
+[net] POST /v1/responses -> 200
+[chat] user: What do bees make?
+[chat] assistant: Bees make honey and beeswax. They also create honeycomb structures. — usage: 13 in / 14 out tokens
+[chat] user: And how do they make it?
+[chat] assistant: Bees produce honey by collecting nectar from flowers and breaking it down with enzymes, while beeswax is secreted by special glands in their larvae. — usage: 38 in / 28 out tokens
+[chat] status: "ready"
+[logout] body: "@pollinations/sdk/reactLog in with Pollinations"
