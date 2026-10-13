@@ -63,14 +63,25 @@ describe("Vertex Gemini routing with OpenRouter fallback", () => {
         },
     );
 
+    // The "google-ai-studio" slug also matches its pricier priority and flex
+    // tiers, so routes pinned to it exclude them.
+    const ignoredTiers: Partial<Record<string, string[]>> = {
+        "google-ai-studio": [
+            "google-ai-studio/priority",
+            "google-ai-studio/flex",
+        ],
+    };
+
     it.each(routes)(
         "pins the %s fallback to %s",
         (_model, upstreamModel, fallback, providerTag) => {
             const { options } = resolveModelConfig([], { model: fallback });
+            const ignore = ignoredTiers[providerTag];
 
             expect(options.model).toBe(`google/${upstreamModel}`);
             expect(options.provider).toEqual({
                 only: [providerTag],
+                ...(ignore && { ignore }),
                 allow_fallbacks: false,
             });
             expect(options.modelConfig).toMatchObject({
